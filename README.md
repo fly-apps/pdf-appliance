@@ -1,18 +1,18 @@
 # PDF Appliance
 
 This application enables you to offload your applications PDF generation requirements to an this application.  Key features:
-  * Installs and runs Google Chrome headless.  Putting this into a second application keeps your applications image smaller, enabling quicker deployment.
+  * Installs and runs Google Chrome headless.  Putting this into a second application keeps your application's image smaller, enabling quicker deployment.
   * Starts on demand.  Google Chrome is known to require considerable memory.  Instead of scaling your app's memory requirements to handle peak usage when PDFs are being generated, you can separately scale your app and this appliance.  The memory needed to run this appliance
   will only be allocated when you are generating PDFs.
   * Reuses the Google Chrome instance across multiple requests.  Starting Chrome can add a second or two to PDF generation.  By reusing an
   existing instance this can be avoided.  When combined with disabling JavaScript, achieving sub-second response times for generation of modest sized PDFs can be achieved.
-  * Integrations with the authentication you already have.  Whether your authentication is session, cookie, or even HTTP basic auth, all the
-  headers required will be passed through.
+  * Integrates with the authentication you already have.  Whether your authentication is session, cookie, or even HTTP basic auth, all the
+  HTTP headers required will be passed through to your application.
 
 ## [Installation](#installation)
 
-* Clone this repository
-* Use [`fly apps create`](https://fly.io/docs/flyctl/apps-create/) to create an application.  Generally we recommend that you take your existing application's name and add `-pdf` to the end of it, but you can call this whatever you want, and even use the `--generate-name` to let fly create one for you.
+* Clone this repository.
+* Use [`fly apps create`](https://fly.io/docs/flyctl/apps-create/) to create an application.  Generally we recommend that you take your existing application's name and add `-pdf` to the end of it, but you can choose whatever name you want, and even use the `--generate-name` to let fly create one for you.
 * Set the app name and primary region in the `fly.toml`.  Adjust the [environment](#environment) variables as needed.
 * Run [`fly deploy`](https://fly.io/docs/flyctl/deploy/)
 * Scale as needed.  See [scaling](#scaling) below.
@@ -23,7 +23,7 @@ This application enables you to offload your applications PDF generation require
 * `PORT`: Port that the appliance listens to.  Must match the `internal_port` in your fly.toml.  Defaults to 3000.
 * `TIMEOUT`: Number of minutes the appliance can remain idle before it is shutdown.
 * `FORMAT`: Puppeteer [PaperFormat](https://pptr.dev/api/puppeteer.paperformat).  Defaults to `letter`.
-* `JAVASCRIPT`: Set to `false` to disable JavaScript.  If set to `false`, formatting will begin as soon as the page has [loaded](https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event).  Otherwise, formatting will be delayed until the [`networkidle2`](https://pptr.dev/api/puppeteer.puppeteerlifecycleevent).
+* `JAVASCRIPT`: Set to `false` to disable JavaScript.  If set to `false`, formatting will begin as soon as the page has [loaded](https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event).  Otherwise, formatting will be delayed until the [`networkidle2`](https://pptr.dev/api/puppeteer.puppeteerlifecycleevent) life cycle event occurs (500ms with no more than 2 network connections).
 
 ## [Integrate with your existing application](#integrate)
 
